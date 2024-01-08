@@ -55,6 +55,4 @@ jobs:
             type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/zad2:cache 
           cache-to: |
             type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/zad2:cache  
-          tags: |
-            tags: ${{ steps.meta.outputs.tags }}
-            labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.meta.outputs.tags }}
