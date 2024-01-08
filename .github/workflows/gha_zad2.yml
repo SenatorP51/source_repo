@@ -1,10 +1,10 @@
 name: budowanie obrazu multiarch (job:build) 
 
 on:
-  workflow_dispatch:
+  # workflow_dispatch:
   push:
-    # branches: 
-    #  - 'main'
+    branches: 
+      - 'main'
     tags:
       - 'v*'
 
@@ -27,8 +27,8 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/zad2
           tags: |
             # type=ref,event=branch
-            # type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{version}}
+            # type=semver,pattern={{major}}.{{minor}}
 
       - 
         name: Set up QEMU
