@@ -1,0 +1,61 @@
+name: budowanie obrazu multiarch (job:build) 
+
+on:
+# workflow_dispatch:
+  push:
+    branches: 
+      - 'main'
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    name: Build and push Docker image to Docker Hub
+    runs-on: ubuntu-latest
+
+    steps:
+      - 
+        name: Check out the source_repo
+        uses: actions/checkout@v4
+      
+      -
+        name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/zad2
+          tags: |
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+
+      - 
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - 
+        name: Buildx set-up
+        uses: docker/setup-buildx-action@v3
+
+      - 
+        name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - 
+        name: Build and push Docker image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          cache-from: |
+            type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/zad2:cache 
+          cache-to: |
+            type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/zad2:cache  
+          tags: |
+            tags: ${{ steps.meta.outputs.tags }}
