@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      output1: ${{ steps.meta.outputs.tag }}
+      output1: ${{ steps.meta.outputs.tags }}
       
 
     steps:
