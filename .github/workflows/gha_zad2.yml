@@ -27,7 +27,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ secrets.DOCKERHUB_USERNAME }}/zad2
+          images: spg51/zad2
           tags: type=semver,pattern={{version}}   
 
       - 
