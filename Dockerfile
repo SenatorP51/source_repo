@@ -1,10 +1,9 @@
-FROM node:alpine AS builder
-ENV NODE_OPTIONS=--openssl-legacy-provider
-WORKDIR '/app'
-COPY package.json .
-RUN npm install
-COPY . .
-RUN npm run build
+FROM busybox:1.35
 
-FROM nginx AS deploy
-COPY --from=builder /app/build /usr/share/nginx/html
+# Create a non-root user to own the httpd server files
+RUN adduser -D static
+USER static
+WORKDIR /home/static
+
+# Run BusyBox httpd server
+CMD ["busybox", "httpd", "-f", "-v", "-p", "3000"]
