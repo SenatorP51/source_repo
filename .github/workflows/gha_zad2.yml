@@ -2,11 +2,11 @@ name: budowanie obrazu multiarch (job:build)
 
 on:
   workflow_dispatch:
-  push:
+  # push:
     # branches: 
     #  - 'main'
-    tags:
-      - 'v*'
+    # tags:
+    #  - 'v*'
 
 jobs:
   build:
