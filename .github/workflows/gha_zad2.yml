@@ -70,7 +70,7 @@ jobs:
         name: Check out the config_repo
         uses: actions/checkout@v4
         with:
-          repository: ${{ secrets.GIT_USERNAME }}
+          repository: ${{ secrets.GIT_USERNAME }}/config_repo
           token: ${{ secrets.GIT_TOKEN }}
       
       - 
@@ -79,6 +79,7 @@ jobs:
           git config user.email ${{ secrets.GIT_EMAIL }} 
           git config user.name ${{ secrets.GIT_USERNAME }}
           sed -i "s+${{ secrets.DOCKERHUB_USERNAME }}/zad2.*+${{ needs.ci_step.outputs.image_tag }}+g" deployment.yaml
-          git commit -a -m "New image deployed: ${{ needs.ci_step.outputs.image_tag }}"
+          git add .
+          git commit -m "New image deployed: ${{ needs.ci_step.outputs.image_tag }}"
           git push origin main
           
