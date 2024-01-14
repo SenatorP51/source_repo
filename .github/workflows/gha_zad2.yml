@@ -28,7 +28,10 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: spg51/zad2
-          tags: type=semver,pattern={{version}}   
+          flavor: latest=false
+          tags: |
+            type=schedule,priority=100,pattern={{date 'YYYYMMDD-hhmmss' tz='Europe/Warsaw'}}
+            type=semver,priority=200,pattern={{version}}   
 
       - 
         name: Set up QEMU
