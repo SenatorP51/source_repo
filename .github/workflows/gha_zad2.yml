@@ -75,11 +75,13 @@ jobs:
       
       - 
         name: Modify the K8s manifests
-        run: |
+        env:
+          NEW_TAG: ${{ needs.ci_step.outputs.image_tag }}
+        run: |         
           git config user.email ${{ secrets.GIT_EMAIL }} 
           git config user.name ${{ secrets.GIT_USERNAME }}
-          sed -i "s+${{ secrets.DOCKERHUB_USERNAME }}/zad2.*+${{ needs.ci_step.outputs.image_tag }}+g" deployment.yaml
+          sed -i "s+${{ secrets.DOCKERHUB_USERNAME }}/zad2.*+$NEW_TAG+g" deployment.yaml
           git add .
-          git commit -m "New image deployed: ${{ needs.ci_step.outputs.image_tag }}"
+          git commit -m "New image deployed: $NEW_TAG"
           git push origin main
           
