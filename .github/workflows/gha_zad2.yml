@@ -30,7 +30,7 @@ jobs:
           images: spg51/zad2
           flavor: latest=false
           tags: |
-            type=schedule,priority=100,pattern={{date 'YYYYMMDD-hhmmss' tz='Europe/Warsaw'}}
+            type=sha,priority=100,prefix=sha-,format=short
             type=semver,priority=200,pattern={{version}}   
 
       - 
