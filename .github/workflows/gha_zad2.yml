@@ -13,8 +13,8 @@ jobs:
     name: Build and push Docker image to Docker Hub
     runs-on: ubuntu-latest
 
-    # outputs:
-      # output1: ${{ steps.meta.outputs.labels["org.opencontainers.image.version"] }}
+    outputs:
+      output1: ${{ steps.meta.outputs.labels["org.opencontainers.image.version"] }}
       
 
     steps:
@@ -68,6 +68,4 @@ jobs:
     
     steps:
       - 
-        env:
-          OUTPUT1: ${{needs.build.outputs.output1}}
-        run: echo "$OUTPUT1"
+        run: echo ${{needs.build.outputs.output1}}
