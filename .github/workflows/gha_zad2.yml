@@ -63,7 +63,7 @@ jobs:
       -
         name: xxx
         id: memory
-        run: echo "new_tag=${{ steps.meta.outputs.labels["org.opencontainers.image.version"] }}" >> "$GITHUB_OUTPUT" 
+        run: echo "new_tag=${{ steps.meta.outputs.labels[org.opencontainers.image.version] }}" >> "$GITHUB_OUTPUT" 
 
   cd_step:
     name: Modify deployment and configmaps K8s manifests 
