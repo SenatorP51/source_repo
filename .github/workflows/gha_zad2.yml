@@ -85,8 +85,8 @@ jobs:
           git config user.email ${{ secrets.GIT_EMAIL }} 
           git config user.name ${{ secrets.GIT_USERNAME }}
           pwd
-          sed -i 's/${{ secrets.DOCKERHUB_USERNAME }}\/zad2:.*/${{ secrets.DOCKERHUB_USERNAME }}\/zad2:$NEW_TAG\g" deployment.yaml
-          sed -i 's/${{ secrets.DOCKERHUB_USERNAME }}\/zad2:.*/${{ secrets.DOCKERHUB_USERNAME }}\/zad2:$NEW_TAG\g" configmap.yaml
+          sed -i 's/${{ secrets.DOCKERHUB_USERNAME }}\/zad2:.*/${{ secrets.DOCKERHUB_USERNAME }}\/zad2:$NEW_TAG\g' deployment.yaml
+          sed -i 's/${{ secrets.DOCKERHUB_USERNAME }}\/zad2:.*/${{ secrets.DOCKERHUB_USERNAME }}\/zad2:$NEW_TAG\g' configmap.yaml
           git add .
           git commit -m "New image deployed: $NEW_TAG"
           git push origin main
