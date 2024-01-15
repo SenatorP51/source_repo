@@ -2,11 +2,9 @@ name: Zad2 - GHAction example solution
 
 on:
   workflow_dispatch:
-  # push:
-    # branches: 
-    #  - 'main'
-    # tags:
-    #  - 'v*'
+  push:
+    tags:
+    - 'v*'
 
 jobs:
   ci_step:
@@ -61,9 +59,10 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
       
       -
-        name: xxx
+        name: Interjobs output declaration
         id: memory
         run: echo "new_tag=${{ steps.meta.outputs.version }}" >> "$GITHUB_OUTPUT" 
+        shell: bash
 
   cd_step:
     name: Modify deployment and configmaps K8s manifests 
@@ -86,7 +85,8 @@ jobs:
           git config user.email ${{ secrets.GIT_EMAIL }} 
           git config user.name ${{ secrets.GIT_USERNAME }}
           pwd
-          sed -i "s+${{ secrets.DOCKERHUB_USERNAME }}/zad2.*+${{ secrets.DOCKERHUB_USERNAME }}/zad2:$NEW_TAG+g" deployment.yaml
+          sed -i 's/${{ secrets.DOCKERHUB_USERNAME }}\/zad2:.*/${{ secrets.DOCKERHUB_USERNAME }}\/zad2:$NEW_TAG\g" deployment.yaml
+          sed -i 's/${{ secrets.DOCKERHUB_USERNAME }}\/zad2:.*/${{ secrets.DOCKERHUB_USERNAME }}\/zad2:$NEW_TAG\g" configmap.yaml
           git add .
           git commit -m "New image deployed: $NEW_TAG"
           git push origin main
