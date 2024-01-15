@@ -23,7 +23,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ secrets.DOCKERHUB_USERNAME }}/zad2
+          images: ${{ vars.DOCKERHUB_USERNAME }}/zad2
           flavor: latest=false
           tags: |
             type=sha,priority=100,prefix=sha-,format=short
@@ -41,7 +41,7 @@ jobs:
         name: Login to DockerHub
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - 
@@ -53,9 +53,9 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           cache-from: |
-            type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/zad2:cache 
+            type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/zad2:cache 
           cache-to: |
-            type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/zad2:cache  
+            type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/zad2:cache  
           tags: ${{ steps.meta.outputs.tags }}
       
       -
@@ -78,19 +78,26 @@ jobs:
         name: Check out the config_repo
         uses: actions/checkout@v4
         with:
-          repository: ${{ secrets.GIT_USERNAME }}/config_repo
+          repository: ${{ vars.GIT_USERNAME }}/config_repo
           ref: main
           token: ${{ secrets.GIT_TOKEN }}
       
+      -
+        name: Configure Git
+        run: |
+          git config user.email ${{ vars.GIT_EMAIL }} 
+          git config user.name ${{ vars.GIT_USERNAME }}
+
       - 
         name: Modify the K8s manifests
         run: |         
-          git config user.email ${{ secrets.GIT_EMAIL }} 
-          git config user.name ${{ secrets.GIT_USERNAME }}
-          pwd
-          sed -i 's/${{ secrets.DOCKERHUB_USERNAME }}\/zad2:.*/${{ secrets.DOCKERHUB_USERNAME }}\/zad2:${{ env.NEW_TAG }}/g' deployment.yaml
-          sed -i 's/${{ secrets.DOCKERHUB_USERNAME }}\/zad2:.*/${{ secrets.DOCKERHUB_USERNAME }}\/zad2:${{ env.NEW_TAG }}/g' configmap.yaml
+          sed -i 's/${{ vars.DOCKERHUB_USERNAME }}\/zad2:.*/${{ vars.DOCKERHUB_USERNAME }}\/zad2:${{ env.NEW_TAG }}/g' ./deployment.yaml
+          sed -i 's/${{ vars.DOCKERHUB_USERNAME }}\/zad2:.*/${{ vars.DOCKERHUB_USERNAME }}\/zad2:${{ env.NEW_TAG }}/g' ./configmap.yaml
+       
+      -
+        name: Commit and push to config repo
+        run: |   
           git add .
-          git commit -m "New image deployed with tag: ${{ env.NEW_TAG }}"
+          git commit -m "New image with tag: ${{ env.NEW_TAG }}"
           git push origin main
           
