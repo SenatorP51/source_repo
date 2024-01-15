@@ -13,7 +13,7 @@ jobs:
     name: Build, tag and push Docker image to DockerHub
     runs-on: ubuntu-latest
     outputs:
-      image_tag: ${{ steps.meta.outputs.tags }}
+      image_tag: ${{ steps.memory.outputs.new_tag }}
       
     steps:
       - 
@@ -59,6 +59,11 @@ jobs:
           cache-to: |
             type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/zad2:cache  
           tags: ${{ steps.meta.outputs.tags }}
+      
+      -
+        name: xxx
+        id: memory
+        run: echo "new_tag=${{ steps.meta.outputs.tags }}" >> "$GITHUB_OUTPUT" 
 
   cd_step:
     name: Modify deployment and configmaps K8s manifests 
